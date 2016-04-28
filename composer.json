@@ -10,13 +10,12 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/Giuseppe-Mazzapica/Striatum/issues",
-        "source": "https://github.com/Giuseppe-Mazzapica/Striatum"
+        "issues": "https://github.com/mcaskill/Striatum/issues",
+        "source": "https://github.com/mcaskill/Striatum"
     },
     "license": "GPL-2.0+",
     "require": {
         "php": ">=5.4",
-        "brain/brain": "~0.1.0",
         "brain/support": "~0.1.0"
     },
     "require-dev": {
@@ -24,12 +23,14 @@
         "mockery/mockery": "dev-master",
         "brain/hooks-mock": "dev-legacy"
     },
+    "suggest": {
+        "brain/brain": "A simple Pimple wrapper for WordPress"
+    },
     "autoload": {
-        "files": ["boot.php"],
         "psr-4": {
             "Brain\\Striatum\\": "src/"
         },
-        "classmap": ["Hooks.php"]
+        "classmap": [ "Hooks.php" ]
     },
     "autoload-dev": {
         "psr-4": {
