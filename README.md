@@ -26,14 +26,15 @@ It is a [Brain Project][6] module.
 ##Read also##
 
  - [API documentation](https://github.com/Giuseppe-Mazzapica/Striatum/blob/master/API.md)
-  
+
 ##Quick Start##
+
 Striatum is very easy to use, e.g. adding an action is as easy as:
 
 ``` php
 Brain\Hooks::addAction( 'myplugin.init', 'init', [ new MyPlugin, 'init' ] );
 ```
-    
+
 or fire a custom action or filter
 
 ``` php
@@ -97,20 +98,20 @@ In facts, the `Brain\Hooks` facade class can be used in dynamic way, like so:
 $hooks = new Brain\Hooks;
 $hooks->addAction( 'plugin.init', 'init', [ new MyPlugin, 'init' ] );
 ```
-    
+
 Looking at `Brain\Hooks` class code, you'll see there is absolutely no difference in the two methods, but using the latter is possible to inject an instance of the class inside other classes. See the following example:
 
 ``` php
 class A_Plugin_Class {
-    
+
   function __construct( \Brain\Hooks $hooks ) {
     $this->hooks = $hooks;
   }
-      
+
   function get_a_filtered_value( $a_value ) {
     return $this->hooks->filter( 'a_filter', $a_value, $this );
   }
-      
+
 }
 ```
 
@@ -119,7 +120,7 @@ Testing the method in isolation is very simple too, an example using PHPUnit and
 
 ``` php
 class A_Plugin_Class_Test () {
-    
+
   test_get_a_filtered_value() {
     $hooks = \Mockery::mock('\Brain\Hooks');
     $hooks->shouldReceive( 'filter' )
@@ -138,10 +139,11 @@ If the classes had used the core `apply_filters` this simple test would be very 
 
 ###Gotchas!###
 
-Striatum is a Brain module. As you can read in [Brain readme][15], it bootstrap itself and its modules on `after_setup_theme` with priority 0, this mean that you **can't use Striatum to attach callbacks to hooks that are triggered before `after_setup_theme`**.
+For those using the _Brain module_—as you can read in [Brain readme][15]—it bootstraps itself and its modules on `after_setup_theme` with priority _0_, this mean that you **can't use Striatum to attach callbacks to hooks that are triggered before `after_setup_theme`**.
 
-There are not so many hooks fired before `after_setup_theme`, and all are available only for plugins and not themes, so if you use Striatum in themes you will not miss anything.
-Main hooks **not** available in Striatum are: `muplugins_loaded` (only for mu-plugins), `plugins_loaded`, `sanitize_comment_cookies`, `setup_theme` and `load_textdomain`.
+There are not so many hooks fired before `after_setup_theme`, and all are available only for plugins and not themes, so if you use Striatum in themes you will not miss anything. Main hooks **not** available in Striatum are: `muplugins_loaded` (only for mu-plugins), `plugins_loaded`, `sanitize_comment_cookies`, `setup_theme` and `load_textdomain`.
+
+If you are using Pimple's _service provider_, the above does apply; you can use Striatum as early as desired without forgetting that the WordPress Plugin API only becomes available once `wp-settings.php` is included. The earliest hook that can be called is `muplugins_loaded`.
 
 ###Requirements###
 
@@ -160,8 +162,22 @@ You need [Composer][16] to install the package. It is hosted on [Packagist][17],
         }
     }
 
-See [Composer documentation][18] on how to install Composer itself, and packages. 
- 
+See [Composer documentation][18] on how to install Composer itself, and packages.
+
+If you want to use Striatum as a _Brain module_:
+
+```php
+add_action( 'brain_init', function( $brain ) {
+    $brain->addModule( new Brain\Striatum\BrainModule );
+} );
+```
+
+If you want to use Striatum as a _Pimple service provider_:
+
+```
+$container->register( new Brain\Striatum\ServiceProvider );
+```
+
 ###Codename: Striatum###
 
 The *Striatum*, also known as the *neostriatum* or *striate nucleus*, is a subcortical  part of the forebrain. Seems that human perception of timing resides in that part of brain.
